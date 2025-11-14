@@ -9,8 +9,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Tu Landing",
-  description:
-    "Desarrollamos landing pages modernas y optimizadas que convierten tu negocio.",
+  description: "Desarrollamos landing pages modernas y optimizadas que impulsan tu negocio.",
   generator: "v0.app",
   icons: {
     icon: [
@@ -37,11 +36,34 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
         <Analytics />
       </body>
     </html>
+  )
+}
+
+function ThemeProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <div suppressHydrationWarning>
+      <script
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: `
+            try {
+              const theme = localStorage.getItem('theme') || 'dark';
+              if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+              } else {
+                document.documentElement.classList.remove('dark');
+              }
+            } catch (e) {}
+          `,
+        }}
+      />
+      {children}
+    </div>
   )
 }
